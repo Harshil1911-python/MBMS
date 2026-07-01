@@ -1,0 +1,59 @@
+<nav class="navbar navbar-expand-lg navbar-csss sticky-top py-2">
+  <div class="container">
+    <a class="navbar-brand navbar-brand-mark" href="{{ url_for('public.home') }}">
+      <span class="badge-ring">CS</span>
+      <span>{{ org_name }}</span>
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="mainNav">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
+        {% if not current_user.is_authenticated %}
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('public.home') }}">Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('public.about') }}">About</a></li>
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('public.success_stories') }}">Success Stories</a></li>
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('public.faqs') }}">FAQs</a></li>
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('public.contact') }}">Contact</a></li>
+        {% elif current_user.is_admin %}
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('admin.dashboard') }}">Dashboard</a></li>
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('admin.profiles_list') }}">Profiles</a></li>
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('admin.users_list') }}">Users</a></li>
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('admin.import_export') }}">Import/Export</a></li>
+        {% elif current_user.is_member %}
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('member.dashboard') }}">Dashboard</a></li>
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('member.browse') }}">Browse Profiles</a></li>
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('member.kundli_match_select') }}">Kundli Matching</a></li>
+        {% else %}
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('profile.create_or_edit') }}">My Biodata</a></li>
+        {% endif %}
+      </ul>
+      <ul class="navbar-nav align-items-lg-center">
+        {% if theme.dark_mode_enabled %}
+        <li class="nav-item me-3 form-check form-switch">
+          <input class="form-check-input" type="checkbox" id="darkModeToggle">
+          <label class="form-check-label small" for="darkModeToggle"><i class="bi bi-moon-stars"></i></label>
+        </li>
+        {% endif %}
+        {% if current_user.is_authenticated %}
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
+              <i class="bi bi-person-circle"></i> {{ current_user.full_name.split(' ')[0] }}
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end">
+              {% if current_user.is_candidate %}
+              <li><a class="dropdown-item" href="{{ url_for('profile.my_profile') }}">My Profile</a></li>
+              {% endif %}
+              <li><a class="dropdown-item" href="{{ url_for('auth.change_password') }}">Change Password</a></li>
+              <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item" href="{{ url_for('auth.logout') }}">Logout</a></li>
+            </ul>
+          </li>
+        {% else %}
+          <li class="nav-item"><a class="btn btn-outline-primary btn-sm me-2" href="{{ url_for('auth.login') }}">Login</a></li>
+          <li class="nav-item"><a class="btn btn-accent btn-sm" href="{{ url_for('auth.register') }}">Register</a></li>
+        {% endif %}
+      </ul>
+    </div>
+  </div>
+</nav>

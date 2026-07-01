@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}Kundli Match Result — {{ org_name }}{% endblock %}
+{% block content %}
+<div class="container py-4" style="max-width: 760px;">
+  <h3 class="display-font text-primary mb-1">Kundli Match Result</h3>
+  <p class="text-muted mb-4">{{ bride.full_name }} &nbsp;&harr;&nbsp; {{ groom.full_name }}</p>
+
+  <div class="card-csss p-4 text-center mb-4">
+    <div class="display-font" style="font-size:3rem;color:var(--color-primary);">{{ result.percentage }}%</div>
+    <p class="mb-1">{{ result.total_score }} / {{ result.max_score }} Gunas Matched</p>
+    <span class="badge bg-primary px-3 py-2">{{ result.recommendation }}</span>
+  </div>
+
+  <div class="card-csss p-4 mb-4">
+    <h6 class="section-title text-primary border-bottom pb-2 mb-3">Guna Breakdown</h6>
+    {% for name, (score, max_score) in result.breakdown.items() %}
+    <div class="mb-2">
+      <div class="d-flex justify-content-between small"><span>{{ name }}</span><span>{{ score }}/{{ max_score }}</span></div>
+      <div class="guna-bar"><div class="fill" style="width: {{ (score / max_score * 100) if max_score else 0 }}%"></div></div>
+    </div>
+    {% endfor %}
+  </div>
+
+  {% if result.doshas %}
+  <div class="card-csss p-4 mb-4">
+    <h6 class="section-title text-primary border-bottom pb-2 mb-3">Doshas / Considerations</h6>
+    <ul class="mb-0 small">
+      {% for d in result.doshas %}<li>{{ d }}</li>{% endfor %}
+    </ul>
+  </div>
+  {% endif %}
+
+  <p class="text-muted small">This is an automated screening based on Rashi and Nakshatra. For a full
+  chart analysis, please consult a qualified astrologer.</p>
+  <a href="{{ url_for('member.kundli_match_select') }}" class="btn btn-outline-primary">Match Another Pair</a>
+</div>
+{% endblock %}

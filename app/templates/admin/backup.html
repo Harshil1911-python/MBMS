@@ -1,0 +1,26 @@
+{% extends "admin/base_admin.html" %}
+{% block title %}Backup / Restore — {{ org_name }}{% endblock %}
+{% block admin_content %}
+<h3 class="display-font text-primary mb-4">Backup & Restore</h3>
+<div class="card-csss p-4 mb-4">
+  <p class="small text-muted">Creates a ZIP archive containing the database and all uploaded files (photos, documents, QR codes, biodata PDFs).</p>
+  <form method="POST" action="{{ url_for('admin.backup_create') }}">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <button type="submit" class="btn btn-primary"><i class="bi bi-hdd-network"></i> Create New Backup</button>
+  </form>
+</div>
+<div class="card-csss p-0">
+  <div class="table-responsive">
+    <table class="table align-middle mb-0">
+      <thead><tr><th>Filename</th><th>Action</th></tr></thead>
+      <tbody>
+        {% for b in backups %}
+        <tr><td>{{ b }}</td><td><a href="{{ url_for('admin.backup_download', filename=b) }}" class="btn btn-sm btn-outline-primary">Download</a></td></tr>
+        {% else %}
+        <tr><td colspan="2" class="text-muted text-center">No backups yet.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

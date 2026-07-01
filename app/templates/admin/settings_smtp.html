@@ -1,0 +1,17 @@
+{% extends "admin/base_admin.html" %}
+{% block title %}SMTP Settings — {{ org_name }}{% endblock %}
+{% block admin_content %}
+<h3 class="display-font text-primary mb-4">Email (SMTP) Settings</h3>
+<div class="alert alert-info small">Credentials are encrypted before being stored in the database.</div>
+<div class="card-csss p-4" style="max-width: 560px;">
+  <form method="POST" novalidate>
+    {{ form.hidden_tag() }}
+    <div class="mb-3">{{ form.server.label(class="form-label") }}{{ form.server(class="form-control") }}</div>
+    <div class="mb-3">{{ form.port.label(class="form-label") }}{{ form.port(class="form-control") }}</div>
+    <div class="mb-3">{{ form.email.label(class="form-label") }}{{ form.email(class="form-control") }}</div>
+    <div class="mb-3">{{ form.password.label(class="form-label") }}{{ form.password(class="form-control", type="password") }}</div>
+    <div class="mb-3">{{ form.encryption.label(class="form-label") }}{{ form.encryption(class="form-select") }}</div>
+    {{ form.submit(class="btn btn-primary w-100") }}
+  </form>
+</div>
+{% endblock %}

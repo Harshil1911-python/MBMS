@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block title %}Login — {{ org_name }}{% endblock %}
+{% block content %}
+<div class="container py-5" style="max-width: 460px;">
+  <div class="card-csss p-4">
+    <div class="text-center mb-4">
+      <h3 class="display-font text-primary">Welcome Back</h3>
+      <div class="divider-gold"></div>
+      <p class="text-muted small">Login to {{ org_name }} Marriage Bureau</p>
+    </div>
+    <form method="POST" novalidate>
+      {{ form.hidden_tag() }}
+      <div class="mb-3">
+        {{ form.email.label(class="form-label") }}
+        {{ form.email(class="form-control" + (" is-invalid" if form.email.errors else "")) }}
+        {% for e in form.email.errors %}<div class="invalid-feedback">{{ e }}</div>{% endfor %}
+      </div>
+      <div class="mb-3">
+        {{ form.password.label(class="form-label") }}
+        {{ form.password(class="form-control" + (" is-invalid" if form.password.errors else "")) }}
+        {% for e in form.password.errors %}<div class="invalid-feedback">{{ e }}</div>{% endfor %}
+      </div>
+      <div class="form-check mb-3">
+        {{ form.remember(class="form-check-input") }}
+        {{ form.remember.label(class="form-check-label") }}
+      </div>
+      {{ form.submit(class="btn btn-primary w-100") }}
+    </form>
+    <p class="text-center small text-muted mt-3 mb-0">
+      New here? <a href="{{ url_for('auth.register') }}">Register your biodata</a>
+    </p>
+  </div>
+</div>
+{% endblock %}

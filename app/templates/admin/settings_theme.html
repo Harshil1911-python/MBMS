@@ -1,0 +1,16 @@
+{% extends "admin/base_admin.html" %}
+{% block title %}Theme Settings — {{ org_name }}{% endblock %}
+{% block admin_content %}
+<h3 class="display-font text-primary mb-4">Theme Settings</h3>
+<div class="card-csss p-4" style="max-width: 500px;">
+  <form method="POST" novalidate>
+    {{ form.hidden_tag() }}
+    <div class="mb-3">{{ form.primary.label(class="form-label") }}{{ form.primary(class="form-control form-control-color", type="color") }}</div>
+    <div class="mb-3">{{ form.secondary.label(class="form-label") }}{{ form.secondary(class="form-control form-control-color", type="color") }}</div>
+    <div class="mb-3">{{ form.accent.label(class="form-label") }}{{ form.accent(class="form-control form-control-color", type="color") }}</div>
+    <div class="form-check mb-3">{{ form.dark_mode_enabled(class="form-check-input") }}{{ form.dark_mode_enabled.label(class="form-check-label") }}</div>
+    <div class="form-check mb-3">{{ form.rounded_cards(class="form-check-input") }}{{ form.rounded_cards.label(class="form-check-label") }}</div>
+    {{ form.submit(class="btn btn-primary w-100") }}
+  </form>
+</div>
+{% endblock %}

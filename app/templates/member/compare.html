@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}Compare Profiles — {{ org_name }}{% endblock %}
+{% block content %}
+<div class="container py-4">
+  <h3 class="display-font text-primary mb-4">Compare Profiles</h3>
+  {% if profiles|length < 2 %}
+  <p class="text-muted">Select at least two profiles from the browse page to compare.</p>
+  {% else %}
+  <div class="table-responsive">
+    <table class="table table-bordered bg-white">
+      <thead><tr><th>Field</th>{% for p in profiles %}<th>{{ p.full_name }}</th>{% endfor %}</tr></thead>
+      <tbody>
+        <tr><td>Age</td>{% for p in profiles %}<td>{{ p.age }}</td>{% endfor %}</tr>
+        <tr><td>Height</td>{% for p in profiles %}<td>{{ p.height_display }}</td>{% endfor %}</tr>
+        <tr><td>City</td>{% for p in profiles %}<td>{{ p.current_city }}</td>{% endfor %}</tr>
+        <tr><td>Qualification</td>{% for p in profiles %}<td>{{ p.qualification }}</td>{% endfor %}</tr>
+        <tr><td>Occupation</td>{% for p in profiles %}<td>{{ p.occupation }}</td>{% endfor %}</tr>
+        <tr><td>Marital Status</td>{% for p in profiles %}<td>{{ p.marital_status }}</td>{% endfor %}</tr>
+        <tr><td>Manglik</td>{% for p in profiles %}<td>{{ p.manglik }}</td>{% endfor %}</tr>
+        <tr><td>View</td>{% for p in profiles %}<td><a href="{{ url_for('member.view_profile', public_id=p.public_id) }}">View</a></td>{% endfor %}</tr>
+      </tbody>
+    </table>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}FAQs — {{ org_name }}{% endblock %}
+{% block content %}
+<section class="qr-header">
+  <div class="container">
+    <h1 class="display-font">Frequently Asked Questions</h1>
+    <div class="divider-gold"></div>
+  </div>
+</section>
+<div class="container py-5" style="max-width: 820px;">
+  {% if faqs %}
+    <div class="accordion" id="faqAccordion">
+      {% for f in faqs %}
+      <div class="accordion-item">
+        <h2 class="accordion-header">
+          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq{{ f.id }}">
+            {{ f.question }}
+          </button>
+        </h2>
+        <div id="faq{{ f.id }}" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+          <div class="accordion-body">{{ f.answer }}</div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p class="text-muted">No FAQs have been published yet. Please check back soon or contact us directly.</p>
+  {% endif %}
+</div>
+{% endblock %}

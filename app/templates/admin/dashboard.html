@@ -1,0 +1,100 @@
+{% extends "admin/base_admin.html" %}
+{% block title %}Admin Dashboard — {{ org_name }}{% endblock %}
+{% block admin_content %}
+<h3 class="display-font text-primary mb-4">Admin Dashboard</h3>
+
+<div class="row g-3 mb-4">
+  <div class="col-6 col-md-3"><div class="stat-widget"><div class="value">{{ stats.total_brides }}</div><div class="label">Total Brides</div></div></div>
+  <div class="col-6 col-md-3"><div class="stat-widget accent"><div class="value">{{ stats.total_grooms }}</div><div class="label">Total Grooms</div></div></div>
+  <div class="col-6 col-md-3"><div class="stat-widget"><div class="value">{{ stats.pending }}</div><div class="label">Pending Approval</div></div></div>
+  <div class="col-6 col-md-3"><div class="stat-widget success"><div class="value">{{ stats.approved }}</div><div class="label">Approved</div></div></div>
+  <div class="col-6 col-md-3"><div class="stat-widget danger"><div class="value">{{ stats.rejected }}</div><div class="label">Rejected</div></div></div>
+  <div class="col-6 col-md-3"><div class="stat-widget"><div class="value">{{ stats.suspended }}</div><div class="label">Suspended</div></div></div>
+  <div class="col-6 col-md-3"><div class="stat-widget"><div class="value">{{ stats.members }}</div><div class="label">Members</div></div></div>
+  <div class="col-6 col-md-3"><div class="stat-widget"><div class="value">{{ stats.admins }}</div><div class="label">Admins</div></div></div>
+</div>
+
+<div class="row g-4 mb-4">
+  <div class="col-md-6">
+    <div class="card-csss p-4">
+      <h6 class="mb-3">Monthly Registrations</h6>
+      <canvas id="monthlyChart" height="180"></canvas>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="card-csss p-4">
+      <h6 class="mb-3">Age Distribution</h6>
+      <canvas id="ageChart" height="180"></canvas>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="card-csss p-4">
+      <h6 class="mb-3">Top Qualifications</h6>
+      <canvas id="eduChart" height="180"></canvas>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="card-csss p-4">
+      <h6 class="mb-3">Top Occupations</h6>
+      <canvas id="occChart" height="180"></canvas>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="card-csss p-4">
+      <h6 class="mb-3">Income Distribution</h6>
+      <canvas id="incomeChart" height="180"></canvas>
+    </div>
+  </div>
+</div>
+
+<div class="card-csss p-4">
+  <h6 class="mb-3">Recent Registrations</h6>
+  <div class="table-responsive">
+    <table class="table table-sm align-middle">
+      <thead><tr><th>Code</th><th>Name</th><th>Type</th><th>City</th><th>Status</th><th>Date</th><th></th></tr></thead>
+      <tbody>
+        {% for p in recent_profiles %}
+        <tr>
+          <td>{{ p.profile_code }}</td>
+          <td>{{ p.full_name }}</td>
+          <td>{{ p.candidate_type.title() }}</td>
+          <td>{{ p.current_city or '-' }}</td>
+          <td><span class="badge badge-status-{{ p.approval_status }}">{{ p.approval_status.title() }}</span></td>
+          <td>{{ p.created_at.strftime('%d %b %Y') }}</td>
+          <td><a href="{{ url_for('admin.profile_detail', public_id=p.public_id) }}" class="btn btn-sm btn-outline-primary">Review</a></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+<script>
+const primary = getComputedStyle(document.documentElement).getPropertyValue('--color-primary').trim();
+const accent = getComputedStyle(document.documentElement).getPropertyValue('--color-accent').trim();
+
+function makeBar(id, labels, values, color) {
+  new Chart(document.getElementById(id), {
+    type: 'bar',
+    data: { labels: labels, datasets: [{ data: values, backgroundColor: color, borderRadius: 6 }] },
+    options: { plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } }
+  });
+}
+function makeLine(id, labels, values, color) {
+  new Chart(document.getElementById(id), {
+    type: 'line',
+    data: { labels: labels, datasets: [{ data: values, borderColor: color, backgroundColor: color + '33', fill: true, tension: 0.35 }] },
+    options: { plugins: { legend: { display: false } } }
+  });
+}
+
+makeLine('monthlyChart', {{ monthly_chart.labels|tojson }}, {{ monthly_chart.values|tojson }}, primary);
+makeBar('ageChart', {{ age_chart.labels|tojson }}, {{ age_chart.values|tojson }}, accent);
+makeBar('eduChart', {{ education_chart.labels|tojson }}, {{ education_chart.values|tojson }}, primary);
+makeBar('occChart', {{ occupation_chart.labels|tojson }}, {{ occupation_chart.values|tojson }}, accent);
+makeBar('incomeChart', {{ income_chart.labels|tojson }}, {{ income_chart.values|tojson }}, primary);
+</script>
+{% endblock %}

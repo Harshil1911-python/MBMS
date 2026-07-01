@@ -1,0 +1,33 @@
+{% extends "admin/base_admin.html" %}
+{% block title %}Announcements — {{ org_name }}{% endblock %}
+{% block admin_content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h3 class="display-font text-primary mb-0">Announcements</h3>
+  <a href="{{ url_for('admin.announcement_create') }}" class="btn btn-primary btn-sm"><i class="bi bi-plus-lg"></i> New</a>
+</div>
+<div class="card-csss p-0">
+  <div class="table-responsive">
+    <table class="table align-middle mb-0">
+      <thead><tr><th>Title</th><th>Banner</th><th>Active</th><th>Created</th><th></th></tr></thead>
+      <tbody>
+        {% for a in items %}
+        <tr>
+          <td>{{ a.title }}</td>
+          <td>{{ 'Yes' if a.is_banner else 'No' }}</td>
+          <td>{{ 'Yes' if a.is_active else 'No' }}</td>
+          <td>{{ a.created_at.strftime('%d %b %Y') }}</td>
+          <td>
+            <form method="POST" action="{{ url_for('admin.announcement_delete', ann_id=a.id) }}" onsubmit="return confirm('Delete?');">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+              <button class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></button>
+            </form>
+          </td>
+        </tr>
+        {% else %}
+        <tr><td colspan="5" class="text-muted text-center">No announcements yet.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

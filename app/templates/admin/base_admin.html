@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-2 px-0 d-none d-md-block">
+      <div class="admin-sidebar">
+        <a href="{{ url_for('admin.dashboard') }}" class="{{ 'active' if request.endpoint == 'admin.dashboard' }}"><i class="bi bi-speedometer2"></i> Dashboard</a>
+        <div class="section-title">Profiles</div>
+        <a href="{{ url_for('admin.profiles_list') }}" class="{{ 'active' if request.endpoint and 'profile' in request.endpoint }}"><i class="bi bi-people"></i> All Profiles</a>
+        <a href="{{ url_for('admin.recycle_bin') }}" class="{{ 'active' if request.endpoint == 'admin.recycle_bin' }}"><i class="bi bi-trash"></i> Recycle Bin</a>
+        <div class="section-title">Users</div>
+        <a href="{{ url_for('admin.users_list') }}" class="{{ 'active' if request.endpoint and 'user' in request.endpoint }}"><i class="bi bi-person-badge"></i> Manage Users</a>
+        <div class="section-title">Data</div>
+        <a href="{{ url_for('admin.import_export') }}" class="{{ 'active' if request.endpoint == 'admin.import_export' }}"><i class="bi bi-arrow-left-right"></i> Import / Export</a>
+        <a href="{{ url_for('admin.backup_page') }}" class="{{ 'active' if request.endpoint == 'admin.backup_page' }}"><i class="bi bi-hdd"></i> Backup / Restore</a>
+        <div class="section-title">Content</div>
+        <a href="{{ url_for('admin.announcements_list') }}" class="{{ 'active' if request.endpoint and 'announcement' in request.endpoint }}"><i class="bi bi-megaphone"></i> Announcements</a>
+        <a href="{{ url_for('admin.contact_messages') }}" class="{{ 'active' if request.endpoint == 'admin.contact_messages' }}"><i class="bi bi-envelope"></i> Contact Messages</a>
+        <div class="section-title">Settings</div>
+        <a href="{{ url_for('admin.settings_site') }}" class="{{ 'active' if request.endpoint == 'admin.settings_site' }}"><i class="bi bi-gear"></i> Site Settings</a>
+        <a href="{{ url_for('admin.settings_smtp') }}" class="{{ 'active' if request.endpoint == 'admin.settings_smtp' }}"><i class="bi bi-envelope-at"></i> SMTP Settings</a>
+        <a href="{{ url_for('admin.settings_theme') }}" class="{{ 'active' if request.endpoint == 'admin.settings_theme' }}"><i class="bi bi-palette"></i> Theme</a>
+        <div class="section-title">Logs</div>
+        <a href="{{ url_for('admin.activity_logs') }}" class="{{ 'active' if request.endpoint == 'admin.activity_logs' }}"><i class="bi bi-clock-history"></i> Activity Logs</a>
+        <a href="{{ url_for('admin.login_logs') }}" class="{{ 'active' if request.endpoint == 'admin.login_logs' }}"><i class="bi bi-shield-check"></i> Login Logs</a>
+      </div>
+    </div>
+    <div class="col-md-10 py-4">
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          {% for category, message in messages %}
+            <div class="alert alert-{{ 'danger' if category == 'error' else category }} alert-dismissible fade show" role="alert">
+              {{ message }}
+              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+          {% endfor %}
+        {% endif %}
+      {% endwith %}
+      {% block admin_content %}{% endblock %}
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}Saved Searches — {{ org_name }}{% endblock %}
+{% block content %}
+<div class="container py-4">
+  <h3 class="display-font text-primary mb-4">Saved Searches</h3>
+  {% if searches %}
+  <div class="list-group">
+    {% for s in searches %}
+    <a href="{{ url_for('member.browse') }}?{{ s.query_string }}" class="list-group-item list-group-item-action">
+      <strong>{{ s.name }}</strong>
+      <span class="text-muted small float-end">{{ s.created_at.strftime('%d %b %Y') }}</span>
+    </a>
+    {% endfor %}
+  </div>
+  {% else %}
+  <p class="text-muted">You haven't saved any searches yet.</p>
+  {% endif %}
+</div>
+{% endblock %}

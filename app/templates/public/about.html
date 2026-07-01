@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}About Us — {{ org_name }}{% endblock %}
+{% block content %}
+<section class="qr-header">
+  <div class="container">
+    <h1 class="display-font">About {{ org_name }}</h1>
+    <div class="divider-gold"></div>
+  </div>
+</section>
+<div class="container py-5" style="max-width: 820px;">
+  {% if page and page.content %}
+    <div>{{ page.content|safe }}</div>
+  {% else %}
+    <p>{{ org_name }} Marriage Bureau has served the Sindhi community with dedication, connecting
+    families through a trusted, transparent, and value-driven matchmaking process. Our mission is to
+    help every member of our community find a life partner who matches not just on paper, but in
+    spirit, values, and tradition.</p>
+    <p>Every profile registered with us is carefully verified by our admin team, and we offer
+    Kundli-based compatibility screening to support families in making informed decisions —
+    always with the final word resting with the families themselves.</p>
+  {% endif %}
+</div>
+{% endblock %}

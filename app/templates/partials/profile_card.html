@@ -1,0 +1,44 @@
+{% macro render_card(p, favorite_ids=None, show_compare=False) %}
+<div class="profile-card">
+  <div class="photo-wrap">
+    {% if p.candidate_type == 'bride' %}
+      <span class="status-ribbon">BRIDE</span>
+    {% else %}
+      <span class="status-ribbon">GROOM</span>
+    {% endif %}
+    {% if p.featured_photo_path %}
+      <img src="{{ url_for('static', filename=p.featured_photo_path) }}" alt="{{ p.full_name }}">
+    {% else %}
+      <div class="d-flex align-items-center justify-content-center h-100 text-muted">
+        <i class="bi bi-person-circle" style="font-size:3rem;"></i>
+      </div>
+    {% endif %}
+    {% if show_compare %}
+    <div class="form-check position-absolute top-0 end-0 m-2 bg-white rounded p-1">
+      <input class="form-check-input compare-check" type="checkbox" name="id" value="{{ p.id }}" form="compareForm">
+    </div>
+    {% endif %}
+  </div>
+  <div class="body">
+    <div class="name">{{ p.full_name }}</div>
+    <div class="meta">{{ p.age or '-' }} yrs &middot; {{ p.height_display }}</div>
+    <div class="meta">{{ p.occupation or 'Occupation N/A' }}</div>
+    <div class="meta"><i class="bi bi-geo-alt"></i> {{ p.current_city or '-' }}</div>
+    <span class="code-tag">{{ p.profile_code }}</span>
+    <div class="d-flex gap-2 mt-3 flex-wrap">
+      <a href="{{ url_for('member.view_profile', public_id=p.public_id) }}" class="btn btn-sm btn-primary flex-fill">
+        <i class="bi bi-eye"></i> View
+      </a>
+      <a href="{{ url_for('member.download_biodata', public_id=p.public_id) }}" class="btn btn-sm btn-outline-primary">
+        <i class="bi bi-file-earmark-pdf"></i>
+      </a>
+      <form method="POST" action="{{ url_for('member.toggle_favorite', public_id=p.public_id) }}" class="d-inline">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <button type="submit" class="btn btn-sm {{ 'btn-accent' if favorite_ids and p.id in favorite_ids else 'btn-outline-secondary' }}">
+          <i class="bi bi-heart{{ '-fill' if favorite_ids and p.id in favorite_ids else '' }}"></i>
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
+{% endmacro %}

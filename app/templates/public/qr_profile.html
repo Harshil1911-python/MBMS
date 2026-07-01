@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% block title %}{{ profile.full_name }} — {{ org_name }}{% endblock %}
+{% block content %}
+<section class="qr-header">
+  <div class="container">
+    {% if profile.featured_photo_path %}
+    <img src="{{ url_for('static', filename=profile.featured_photo_path) }}" class="rounded-circle border border-3 border-light mb-3"
+         style="width:120px;height:120px;object-fit:cover;">
+    {% endif %}
+    <h1 class="display-font">{{ profile.full_name }}</h1>
+    <p class="mb-0">{{ profile.candidate_type.title() }} &middot; Profile Code: {{ profile.profile_code }}</p>
+  </div>
+</section>
+
+<div class="container py-5" style="max-width: 780px;">
+  <div class="card-csss p-4 mb-4">
+    <h5 class="section-title text-primary border-bottom pb-2 mb-3">Basic Information</h5>
+    <div class="row row-cols-1 row-cols-md-2 g-3">
+      <div><strong>Age:</strong> {{ profile.age or '-' }}</div>
+      <div><strong>Height:</strong> {{ profile.height_display }}</div>
+      <div><strong>Marital Status:</strong> {{ profile.marital_status }}</div>
+      <div><strong>City:</strong> {{ profile.current_city or '-' }}</div>
+      <div><strong>Qualification:</strong> {{ profile.qualification or '-' }}</div>
+      <div><strong>Occupation:</strong> {{ profile.occupation or '-' }}</div>
+      <div><strong>Community:</strong> {{ profile.community or '-' }} ({{ profile.sindhi_caste or '-' }})</div>
+      <div><strong>Mother Tongue:</strong> {{ profile.mother_tongue or '-' }}</div>
+    </div>
+  </div>
+
+  {% if profile.photos|length > 1 %}
+  <div class="card-csss p-4 mb-4">
+    <h5 class="section-title text-primary border-bottom pb-2 mb-3">Gallery</h5>
+    <div class="row g-2">
+      {% for photo in profile.photos %}
+      <div class="col-4 col-md-3">
+        <img src="{{ url_for('static', filename=photo.file_path) }}" class="rounded w-100" style="height:120px;object-fit:cover;">
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+
+  {% if public_documents %}
+  <div class="card-csss p-4 mb-4">
+    <h5 class="section-title text-primary border-bottom pb-2 mb-3">Documents</h5>
+    <ul class="list-unstyled mb-0">
+      {% for doc in public_documents %}
+      <li><a href="{{ url_for('static', filename=doc.file_path) }}" target="_blank">
+        <i class="bi bi-file-earmark"></i> {{ doc.doc_type.replace('_',' ').title() }}
+      </a></li>
+      {% endfor %}
+    </ul>
+  </div>
+  {% endif %}
+
+  <div class="text-center text-muted small mt-4">
+    <p>This is a public, read-only profile shared via QR code by {{ org_name }}.<br>
+    For full details or to express interest, please contact the bureau office directly.</p>
+  </div>
+</div>
+{% endblock %}

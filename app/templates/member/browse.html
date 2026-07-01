@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+{% from "partials/profile_card.html" import render_card %}
+{% from "partials/pagination.html" import render_pagination %}
+{% block title %}Browse Profiles — {{ org_name }}{% endblock %}
+{% block content %}
+<div class="container py-4">
+  <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+    <h3 class="display-font text-primary mb-0">
+      {% if category == 'bride' %}Browse Brides
+      {% elif category == 'groom' %}Browse Grooms
+      {% elif category != 'all' %}{{ category.title() }} Profiles
+      {% else %}View Persons{% endif %}
+    </h3>
+    <div class="btn-group">
+      <a href="{{ url_for('member.browse') }}" class="btn btn-sm btn-outline-primary {{ 'active' if category=='all' }}">All</a>
+      <a href="{{ url_for('member.browse', category='bride') }}" class="btn btn-sm btn-outline-primary {{ 'active' if category=='bride' }}">Bride</a>
+      <a href="{{ url_for('member.browse', category='groom') }}" class="btn btn-sm btn-outline-primary {{ 'active' if category=='groom' }}">Groom</a>
+      <a href="{{ url_for('member.browse', category='single') }}" class="btn btn-sm btn-outline-primary {{ 'active' if category=='single' }}">Single</a>
+      <a href="{{ url_for('member.browse', category='divorced') }}" class="btn btn-sm btn-outline-primary {{ 'active' if category=='divorced' }}">Divorced</a>
+      <a href="{{ url_for('member.browse', category='widow') }}" class="btn btn-sm btn-outline-primary {{ 'active' if category=='widow' }}">Widow</a>
+      <a href="{{ url_for('member.browse', category='widower') }}" class="btn btn-sm btn-outline-primary {{ 'active' if category=='widower' }}">Widower</a>
+    </div>
+  </div>
+
+  <div class="row g-4">
+    <div class="col-lg-3">
+      <div class="filter-panel">
+        <h6 class="mb-3">Filters</h6>
+        <form method="GET" id="compareForm">
+          <input type="hidden" name="category" value="{{ category }}">
+          <div class="mb-3">
+            {{ form.age_min.label }}
+            <div class="d-flex gap-2">
+              {{ form.age_min(class="form-control form-control-sm", placeholder="Min") }}
+              {{ form.age_max(class="form-control form-control-sm", placeholder="Max") }}
+            </div>
+          </div>
+          <div class="mb-3">
+            {{ form.height_min.label }}
+            <div class="d-flex gap-2">
+              {{ form.height_min(class="form-control form-control-sm", placeholder="Min cm") }}
+              {{ form.height_max(class="form-control form-control-sm", placeholder="Max cm") }}
+            </div>
+          </div>
+          <div class="mb-3">{{ form.marital_status.label(class="form-label") }}{{ form.marital_status(class="form-select form-select-sm") }}</div>
+          <div class="mb-3">{{ form.city.label(class="form-label") }}{{ form.city(class="form-control form-control-sm") }}</div>
+          <div class="mb-3">{{ form.sindhi_caste.label(class="form-label") }}{{ form.sindhi_caste(class="form-control form-control-sm") }}</div>
+          <div class="mb-3">{{ form.qualification.label(class="form-label") }}{{ form.qualification(class="form-control form-control-sm") }}</div>
+          <div class="mb-3">{{ form.occupation.label(class="form-label") }}{{ form.occupation(class="form-control form-control-sm") }}</div>
+          <div class="mb-3">{{ form.manglik.label(class="form-label") }}{{ form.manglik(class="form-select form-select-sm") }}</div>
+          <div class="mb-3">{{ form.food_preference.label(class="form-label") }}{{ form.food_preference(class="form-select form-select-sm") }}</div>
+          <div class="mb-3">{{ form.kundli_available.label(class="form-label") }}{{ form.kundli_available(class="form-select form-select-sm") }}</div>
+          <div class="mb-3">{{ form.sort.label(class="form-label") }}{{ form.sort(class="form-select form-select-sm") }}</div>
+          <button type="submit" class="btn btn-primary btn-sm w-100">Apply Filters</button>
+          <button type="button" class="btn btn-outline-secondary btn-sm w-100 mt-2"
+                  onclick="document.getElementById('saveSearchModal').classList.add('show'); document.getElementById('saveSearchModal').style.display='block';">
+            <i class="bi bi-bookmark"></i> Save This Search
+          </button>
+        </form>
+        <button id="compareBtn" form="compareForm" formaction="{{ url_for('member.compare') }}" formmethod="GET" class="btn btn-accent btn-sm w-100 mt-2" disabled>Compare (0)</button>
+      </div>
+    </div>
+
+    <div class="col-lg-9">
+      <p class="text-muted small">{{ pagination.total }} profile(s) found</p>
+      <div class="row row-cols-1 row-cols-md-3 g-4">
+        {% for p in profiles %}
+        <div class="col">{{ render_card(p, favorite_ids, show_compare=True) }}</div>
+        {% else %}
+        <p class="text-muted">No profiles match your filters.</p>
+        {% endfor %}
+      </div>
+      {% set args_dict = request.args.to_dict() %}
+      {% set _ = args_dict.pop('category', None) %}
+      {% set _ = args_dict.pop('page', None) %}
+      {{ render_pagination(pagination, 'member.browse', category=category, **args_dict) }}
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="saveSearchModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form method="POST" action="{{ url_for('member.save_search') }}">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <div class="modal-header"><h5 class="modal-title">Save Search</h5></div>
+        <div class="modal-body">
+          <input type="hidden" name="query_string" value="{{ request.query_string.decode() }}">
+          <input type="text" name="name" class="form-control" placeholder="Search name" required>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="document.getElementById('saveSearchModal').style.display='none';">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

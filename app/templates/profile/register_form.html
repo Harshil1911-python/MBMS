@@ -1,0 +1,207 @@
+{% extends "base.html" %}
+{% block title %}My Biodata — {{ org_name }}{% endblock %}
+{% block content %}
+<div class="container py-4">
+  <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+    <div>
+      <h3 class="display-font text-primary mb-0">My Biodata</h3>
+      {% if profile %}
+        <span class="badge badge-status-{{ profile.approval_status }} px-3 py-2">{{ profile.approval_status.title() }}</span>
+        <span class="text-muted small ms-2">Code: {{ profile.profile_code }}</span>
+      {% endif %}
+    </div>
+    {% if profile %}
+    <a href="{{ url_for('profile.my_profile') }}" class="btn btn-outline-primary btn-sm">
+      <i class="bi bi-eye"></i> View My Profile
+    </a>
+    {% endif %}
+  </div>
+
+  {% if not editable %}
+    <div class="alert alert-info">Your profile is approved and read-only. Please contact the admin office for changes.</div>
+  {% endif %}
+
+  <fieldset {{ 'disabled' if not editable }}>
+  <form method="POST" enctype="multipart/form-data" novalidate>
+    {{ form.hidden_tag() }}
+
+    <div class="form-section">
+      <h5 class="section-title">Basic Information</h5>
+      <div class="row g-3">
+        <div class="col-md-6">{{ form.full_name.label(class="form-label") }}{{ form.full_name(class="form-control") }}</div>
+        <div class="col-md-3">{{ form.gender.label(class="form-label") }}{{ form.gender(class="form-select") }}</div>
+        <div class="col-md-3">{{ form.candidate_type.label(class="form-label") }}{{ form.candidate_type(class="form-select") }}</div>
+        <div class="col-md-4">{{ form.father_name.label(class="form-label") }}{{ form.father_name(class="form-control") }}</div>
+        <div class="col-md-4">{{ form.mother_name.label(class="form-label") }}{{ form.mother_name(class="form-control") }}</div>
+        <div class="col-md-4">{{ form.guardian_name.label(class="form-label") }}{{ form.guardian_name(class="form-control") }}</div>
+        <div class="col-md-3">{{ form.date_of_birth.label(class="form-label") }}{{ form.date_of_birth(class="form-control", type="date") }}</div>
+        <div class="col-md-3">{{ form.time_of_birth.label(class="form-label") }}{{ form.time_of_birth(class="form-control", placeholder="e.g. 10:30 AM") }}</div>
+        <div class="col-md-6">{{ form.place_of_birth.label(class="form-label") }}{{ form.place_of_birth(class="form-control") }}</div>
+        <div class="col-md-3">{{ form.height_cm.label(class="form-label") }}{{ form.height_cm(class="form-control") }}</div>
+        <div class="col-md-3">{{ form.weight_kg.label(class="form-label") }}{{ form.weight_kg(class="form-control") }}</div>
+        <div class="col-md-3">{{ form.blood_group.label(class="form-label") }}{{ form.blood_group(class="form-select") }}</div>
+        <div class="col-md-3">{{ form.complexion.label(class="form-label") }}{{ form.complexion(class="form-select") }}</div>
+        <div class="col-md-3">{{ form.body_type.label(class="form-label") }}{{ form.body_type(class="form-select") }}</div>
+        <div class="col-md-3">{{ form.nationality.label(class="form-label") }}{{ form.nationality(class="form-control") }}</div>
+        <div class="col-md-3">{{ form.religion.label(class="form-label") }}{{ form.religion(class="form-control") }}</div>
+        <div class="col-md-3">{{ form.community.label(class="form-label") }}{{ form.community(class="form-control") }}</div>
+        <div class="col-md-3">{{ form.sindhi_caste.label(class="form-label") }}{{ form.sindhi_caste(class="form-control") }}</div>
+        <div class="col-md-3">{{ form.sub_caste.label(class="form-label") }}{{ form.sub_caste(class="form-control") }}</div>
+        <div class="col-md-3">{{ form.mother_tongue.label(class="form-label") }}{{ form.mother_tongue(class="form-control") }}</div>
+        <div class="col-md-3">{{ form.marital_status.label(class="form-label") }}{{ form.marital_status(class="form-select") }}</div>
+        <div class="col-md-3">{{ form.children.label(class="form-label") }}{{ form.children(class="form-control") }}</div>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <h5 class="section-title">Education & Career</h5>
+      <div class="row g-3">
+        <div class="col-md-4">{{ form.qualification.label(class="form-label") }}{{ form.qualification(class="form-control") }}</div>
+        <div class="col-md-4">{{ form.college.label(class="form-label") }}{{ form.college(class="form-control") }}</div>
+        <div class="col-md-4">{{ form.university.label(class="form-label") }}{{ form.university(class="form-control") }}</div>
+        <div class="col-md-4">{{ form.occupation.label(class="form-label") }}{{ form.occupation(class="form-control") }}</div>
+        <div class="col-md-4">{{ form.designation.label(class="form-label") }}{{ form.designation(class="form-control") }}</div>
+        <div class="col-md-4">{{ form.company_business.label(class="form-label") }}{{ form.company_business(class="form-control") }}</div>
+        <div class="col-md-6">{{ form.income_monthly.label(class="form-label") }}{{ form.income_monthly(class="form-control") }}</div>
+        <div class="col-md-6">{{ form.income_yearly.label(class="form-label") }}{{ form.income_yearly(class="form-control") }}</div>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <h5 class="section-title">Location</h5>
+      <div class="row g-3">
+        <div class="col-md-4">{{ form.current_city.label(class="form-label") }}{{ form.current_city(class="form-control") }}</div>
+        <div class="col-md-4">{{ form.current_state.label(class="form-label") }}{{ form.current_state(class="form-control") }}</div>
+        <div class="col-md-4">{{ form.current_country.label(class="form-label") }}{{ form.current_country(class="form-control") }}</div>
+        <div class="col-md-4">{{ form.native_place.label(class="form-label") }}{{ form.native_place(class="form-control") }}</div>
+        <div class="col-md-8"></div>
+        <div class="col-md-6">{{ form.permanent_address.label(class="form-label") }}{{ form.permanent_address(class="form-control", rows="2") }}</div>
+        <div class="col-md-6">{{ form.temporary_address.label(class="form-label") }}{{ form.temporary_address(class="form-control", rows="2") }}</div>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <h5 class="section-title">Contact Details</h5>
+      <div class="row g-3">
+        <div class="col-md-3">{{ form.phone.label(class="form-label") }}{{ form.phone(class="form-control") }}</div>
+        <div class="col-md-3">{{ form.alternate_phone.label(class="form-label") }}{{ form.alternate_phone(class="form-control") }}</div>
+        <div class="col-md-3">{{ form.whatsapp.label(class="form-label") }}{{ form.whatsapp(class="form-control") }}</div>
+        <div class="col-md-3">{{ form.email.label(class="form-label") }}{{ form.email(class="form-control") }}</div>
+        <div class="col-md-6">{{ form.emergency_contact_name.label(class="form-label") }}{{ form.emergency_contact_name(class="form-control") }}</div>
+        <div class="col-md-6">{{ form.emergency_contact_phone.label(class="form-label") }}{{ form.emergency_contact_phone(class="form-control") }}</div>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <h5 class="section-title">Lifestyle</h5>
+      <div class="row g-3">
+        <div class="col-md-4">{{ form.food_preference.label(class="form-label") }}{{ form.food_preference(class="form-select") }}</div>
+        <div class="col-md-4">{{ form.smoking.label(class="form-label") }}{{ form.smoking(class="form-select") }}</div>
+        <div class="col-md-4">{{ form.drinking.label(class="form-label") }}{{ form.drinking(class="form-select") }}</div>
+        <div class="col-md-6">{{ form.hobbies.label(class="form-label") }}{{ form.hobbies(class="form-control", rows="2") }}</div>
+        <div class="col-md-6">{{ form.interests.label(class="form-label") }}{{ form.interests(class="form-control", rows="2") }}</div>
+        <div class="col-md-6">{{ form.habits.label(class="form-label") }}{{ form.habits(class="form-control", rows="2") }}</div>
+        <div class="col-md-6">{{ form.languages_known.label(class="form-label") }}{{ form.languages_known(class="form-control") }}</div>
+        <div class="col-12">{{ form.about_yourself.label(class="form-label") }}{{ form.about_yourself(class="form-control", rows="3") }}</div>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <h5 class="section-title">Partner Preference</h5>
+      <div class="row g-3">
+        <div class="col-md-3">{{ form.pref_age_min.label(class="form-label") }}{{ form.pref_age_min(class="form-control") }}</div>
+        <div class="col-md-3">{{ form.pref_age_max.label(class="form-label") }}{{ form.pref_age_max(class="form-control") }}</div>
+        <div class="col-md-3">{{ form.pref_height_min.label(class="form-label") }}{{ form.pref_height_min(class="form-control") }}</div>
+        <div class="col-md-3">{{ form.pref_height_max.label(class="form-label") }}{{ form.pref_height_max(class="form-control") }}</div>
+        <div class="col-md-4">{{ form.pref_education.label(class="form-label") }}{{ form.pref_education(class="form-control") }}</div>
+        <div class="col-md-4">{{ form.pref_profession.label(class="form-label") }}{{ form.pref_profession(class="form-control") }}</div>
+        <div class="col-md-4">{{ form.pref_location.label(class="form-label") }}{{ form.pref_location(class="form-control") }}</div>
+        <div class="col-12">{{ form.pref_lifestyle.label(class="form-label") }}{{ form.pref_lifestyle(class="form-control", rows="2") }}</div>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <h5 class="section-title">Astrological Details</h5>
+      <div class="row g-3">
+        <div class="col-md-3">{{ form.manglik.label(class="form-label") }}{{ form.manglik(class="form-select") }}</div>
+        <div class="col-md-3">{{ form.rashi.label(class="form-label") }}{{ form.rashi(class="form-select") }}</div>
+        <div class="col-md-3">{{ form.nakshatra.label(class="form-label") }}{{ form.nakshatra(class="form-select") }}</div>
+        <div class="col-md-3">{{ form.mulank.label(class="form-label") }}{{ form.mulank(class="form-control") }}</div>
+        <div class="col-md-4 form-check mt-4">
+          {{ form.kundli_available(class="form-check-input") }}
+          {{ form.kundli_available.label(class="form-check-label") }}
+        </div>
+        <div class="col-md-8">{{ form.kundli_file.label(class="form-label") }}{{ form.kundli_file(class="form-control") }}</div>
+        <div class="col-md-6">{{ form.birth_chart_notes.label(class="form-label") }}{{ form.birth_chart_notes(class="form-control", rows="2") }}</div>
+        <div class="col-md-6">{{ form.horoscope_notes.label(class="form-label") }}{{ form.horoscope_notes(class="form-control", rows="2") }}</div>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <h5 class="section-title">Medical Information</h5>
+      <div class="row g-3">
+        <div class="col-md-4">{{ form.disability.label(class="form-label") }}{{ form.disability(class="form-control") }}</div>
+        <div class="col-md-4">{{ form.medical_notes.label(class="form-label") }}{{ form.medical_notes(class="form-control") }}</div>
+        <div class="col-md-4">{{ form.special_notes.label(class="form-label") }}{{ form.special_notes(class="form-control") }}</div>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <h5 class="section-title">Photos <span class="text-muted small">(min 5, max 20)</span></h5>
+      {% if profile and profile.photos %}
+      <div class="d-flex flex-wrap gap-2 mb-3">
+        {% for photo in profile.photos %}
+        <div class="text-center">
+          <img src="{{ url_for('static', filename=photo.thumbnail_path or photo.file_path) }}" class="rounded border" style="width:90px;height:110px;object-fit:cover;">
+          {% if editable %}
+          <div class="d-flex gap-1 mt-1 justify-content-center">
+            <form method="POST" action="{{ url_for('profile.feature_photo', photo_id=photo.id) }}">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+              <button class="btn btn-sm btn-outline-primary py-0 px-1" title="Set as featured"><i class="bi bi-star"></i></button>
+            </form>
+            <form method="POST" action="{{ url_for('profile.delete_photo', photo_id=photo.id) }}">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+              <button class="btn btn-sm btn-outline-danger py-0 px-1" title="Remove"><i class="bi bi-trash"></i></button>
+            </form>
+          </div>
+          {% endif %}
+        </div>
+        {% endfor %}
+      </div>
+      {% endif %}
+      {{ form.photo_files(class="form-control", id="photos", multiple=True) }}
+      <div id="photoPreview" class="d-flex flex-wrap mt-2"></div>
+    </div>
+
+    <div class="form-section">
+      <h5 class="section-title">Verification Documents</h5>
+      <div class="row g-3">
+        <div class="col-md-4">{{ form.aadhar_doc.label(class="form-label") }}{{ form.aadhar_doc(class="form-control") }}</div>
+        <div class="col-md-4">{{ form.passport_doc.label(class="form-label") }}{{ form.passport_doc(class="form-control") }}</div>
+        <div class="col-md-4">{{ form.pan_doc.label(class="form-label") }}{{ form.pan_doc(class="form-control") }}</div>
+        <div class="col-md-4">{{ form.driving_license_doc.label(class="form-label") }}{{ form.driving_license_doc(class="form-control") }}</div>
+        <div class="col-md-4">{{ form.other_doc.label(class="form-label") }}{{ form.other_doc(class="form-control") }}</div>
+      </div>
+      {% if profile and profile.documents %}
+      <hr>
+      <p class="small text-muted mb-1">Uploaded documents:</p>
+      <ul class="list-unstyled small">
+        {% for doc in profile.documents %}
+        <li><i class="bi bi-file-earmark-check text-success"></i> {{ doc.doc_type.replace('_',' ').title() }} — {{ doc.original_filename or 'file' }}</li>
+        {% endfor %}
+      </ul>
+      {% endif %}
+    </div>
+
+    <div class="form-section">
+      <div class="form-check">
+        {{ form.declaration_accepted(class="form-check-input") }}
+        {{ form.declaration_accepted.label(class="form-check-label") }}
+      </div>
+    </div>
+
+    {{ form.submit(class="btn btn-primary btn-lg px-5") }}
+  </form>
+  </fieldset>
+</div>
+{% endblock %}

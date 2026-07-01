@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block title %}File Too Large{% endblock %}
+{% block content %}
+<div class="container py-5 text-center">
+  <i class="bi bi-file-earmark-excel text-danger" style="font-size:4rem;"></i>
+  <h1 class="display-font mt-3">413 — File Too Large</h1>
+  <p class="text-muted">The file you uploaded exceeds the maximum allowed size.</p>
+  <a href="javascript:history.back()" class="btn btn-primary mt-2">Go Back</a>
+</div>
+{% endblock %}

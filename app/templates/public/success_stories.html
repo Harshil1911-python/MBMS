@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}Success Stories — {{ org_name }}{% endblock %}
+{% block content %}
+<section class="qr-header">
+  <div class="container">
+    <h1 class="display-font">Success Stories</h1>
+    <div class="divider-gold"></div>
+  </div>
+</section>
+<div class="container py-5">
+  <div class="row g-4">
+    {% for t in testimonials %}
+    <div class="col-md-4">
+      <div class="card-csss p-4 h-100">
+        {% if t.photo_path %}<img src="{{ url_for('static', filename=t.photo_path) }}" class="rounded mb-3 w-100" style="height:180px;object-fit:cover;">{% endif %}
+        <h6 class="fw-bold">{{ t.couple_names }}</h6>
+        <p class="text-muted small">{{ t.story }}</p>
+      </div>
+    </div>
+    {% else %}
+    <p class="text-muted text-center">No success stories published yet.</p>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,50 @@
+{% extends "admin/base_admin.html" %}
+{% from "partials/pagination.html" import render_pagination %}
+{% block title %}All Profiles — {{ org_name }}{% endblock %}
+{% block admin_content %}
+<div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+  <h3 class="display-font text-primary mb-0">All Profiles</h3>
+  <div class="d-flex gap-2">
+    <a href="{{ url_for('admin.export_csv') }}" class="btn btn-sm btn-outline-primary"><i class="bi bi-download"></i> CSV</a>
+    <a href="{{ url_for('admin.export_excel') }}" class="btn btn-sm btn-outline-primary"><i class="bi bi-file-earmark-excel"></i> Excel</a>
+  </div>
+</div>
+
+<div class="btn-group mb-3">
+  <a href="{{ url_for('admin.profiles_list') }}" class="btn btn-sm btn-outline-secondary {{ 'active' if not status }}">All</a>
+  <a href="{{ url_for('admin.profiles_list', status='pending') }}" class="btn btn-sm btn-outline-secondary {{ 'active' if status=='pending' }}">Pending</a>
+  <a href="{{ url_for('admin.profiles_list', status='approved') }}" class="btn btn-sm btn-outline-secondary {{ 'active' if status=='approved' }}">Approved</a>
+  <a href="{{ url_for('admin.profiles_list', status='rejected') }}" class="btn btn-sm btn-outline-secondary {{ 'active' if status=='rejected' }}">Rejected</a>
+  <a href="{{ url_for('admin.profiles_list', status='suspended') }}" class="btn btn-sm btn-outline-secondary {{ 'active' if status=='suspended' }}">Suspended</a>
+</div>
+
+<div class="card-csss p-0">
+  <div class="table-responsive">
+    <table class="table align-middle mb-0">
+      <thead><tr><th>Code</th><th>Name</th><th>Type</th><th>Age</th><th>City</th><th>Status</th><th>Actions</th></tr></thead>
+      <tbody>
+        {% for p in profiles %}
+        <tr>
+          <td>{{ p.profile_code }}</td>
+          <td>{{ p.full_name }}</td>
+          <td>{{ p.candidate_type.title() }}</td>
+          <td>{{ p.age or '-' }}</td>
+          <td>{{ p.current_city or '-' }}</td>
+          <td><span class="badge badge-status-{{ p.approval_status }}">{{ p.approval_status.title() }}</span></td>
+          <td class="d-flex gap-1 flex-wrap">
+            <a href="{{ url_for('admin.profile_detail', public_id=p.public_id) }}" class="btn btn-sm btn-outline-primary"><i class="bi bi-eye"></i></a>
+            <a href="{{ url_for('admin.edit_profile', public_id=p.public_id) }}" class="btn btn-sm btn-outline-secondary"><i class="bi bi-pencil"></i></a>
+            <form method="POST" action="{{ url_for('admin.delete_profile', public_id=p.public_id) }}" onsubmit="return confirm('Move to recycle bin?');">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+              <button class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% set args_dict = request.args.to_dict() %}{% set _ = args_dict.pop('page', None) %}
+{{ render_pagination(pagination, 'admin.profiles_list', **args_dict) }}
+{% endblock %}

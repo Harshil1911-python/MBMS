@@ -1,0 +1,27 @@
+{% extends "admin/base_admin.html" %}
+{% block title %}Import / Export — {{ org_name }}{% endblock %}
+{% block admin_content %}
+<h3 class="display-font text-primary mb-4">Import / Export</h3>
+<div class="row g-4">
+  <div class="col-md-6">
+    <div class="card-csss p-4">
+      <h6 class="mb-3"><i class="bi bi-upload"></i> Import Profiles (CSV)</h6>
+      <p class="small text-muted">Required columns: full_name, gender, candidate_type, email, phone, date_of_birth (YYYY-MM-DD).
+      Optional: current_city, occupation, qualification, sindhi_caste.</p>
+      <form method="POST" action="{{ url_for('admin.import_csv') }}" enctype="multipart/form-data">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <input type="file" name="csv_file" accept=".csv" class="form-control mb-3" required>
+        <button type="submit" class="btn btn-primary w-100">Import CSV</button>
+      </form>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="card-csss p-4">
+      <h6 class="mb-3"><i class="bi bi-download"></i> Export Profiles</h6>
+      <p class="small text-muted">Download all non-deleted profiles.</p>
+      <a href="{{ url_for('admin.export_csv') }}" class="btn btn-outline-primary w-100 mb-2">Export as CSV</a>
+      <a href="{{ url_for('admin.export_excel') }}" class="btn btn-outline-primary w-100">Export as Excel</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

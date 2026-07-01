@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+{% block title %}{{ profile.full_name }} — {{ org_name }}{% endblock %}
+{% block content %}
+<div class="container py-4">
+  <div class="row g-4">
+    <div class="col-lg-4">
+      <div class="card-csss p-3">
+        {% if profile.featured_photo_path %}
+        <img src="{{ url_for('static', filename=profile.featured_photo_path) }}" class="rounded w-100 mb-3" style="height:340px;object-fit:cover;">
+        {% endif %}
+        {% if profile.photos|length > 1 %}
+        <div class="d-flex gap-2 flex-wrap mb-3">
+          {% for photo in profile.photos %}
+          <img src="{{ url_for('static', filename=photo.thumbnail_path or photo.file_path) }}" class="rounded" style="width:60px;height:70px;object-fit:cover;">
+          {% endfor %}
+        </div>
+        {% endif %}
+        <div class="d-grid gap-2">
+          <a href="{{ url_for('member.download_biodata', public_id=profile.public_id) }}" class="btn btn-primary btn-sm"><i class="bi bi-file-earmark-pdf"></i> Download Biodata</a>
+          <form method="POST" action="{{ url_for('member.toggle_favorite', public_id=profile.public_id) }}">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <button class="btn btn-sm w-100 {{ 'btn-accent' if is_favorite else 'btn-outline-secondary' }}">
+              <i class="bi bi-heart{{ '-fill' if is_favorite else '' }}"></i> {{ 'Remove Favourite' if is_favorite else 'Add to Favourites' }}
+            </button>
+          </form>
+          <button onclick="window.print()" class="btn btn-outline-secondary btn-sm"><i class="bi bi-printer"></i> Print</button>
+          {% if profile.qr_path %}
+          <img src="{{ url_for('static', filename=profile.qr_path) }}" class="mx-auto mt-2" style="width:110px;">
+          {% endif %}
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-8">
+      <h3 class="display-font text-primary mb-1">{{ profile.full_name }}</h3>
+      <p class="text-muted">{{ profile.candidate_type.title() }} &middot; {{ profile.profile_code }} &middot; {{ profile.age }} yrs</p>
+
+      {% macro section(title, rows) %}
+      <div class="card-csss p-4 mb-3">
+        <h6 class="section-title text-primary border-bottom pb-2 mb-3">{{ title }}</h6>
+        <div class="row row-cols-1 row-cols-md-2 g-2 small">
+          {% for label, value in rows %}
+          <div><strong>{{ label }}:</strong> {{ value if value not in (None, '') else '-' }}</div>
+          {% endfor %}
+        </div>
+      </div>
+      {% endmacro %}
+
+      {{ section("Personal Details", [
+        ("Date of Birth", profile.date_of_birth.strftime('%d %b %Y') if profile.date_of_birth else '-'),
+        ("Height / Weight", profile.height_display ~ ' / ' ~ (profile.weight_kg or '-') ~ ' kg'),
+        ("Blood Group", profile.blood_group),
+        ("Complexion / Body Type", (profile.complexion or '-') ~ ' / ' ~ (profile.body_type or '-')),
+        ("Marital Status", profile.marital_status),
+        ("Community / Caste", (profile.community or '-') ~ ' / ' ~ (profile.sindhi_caste or '-')),
+        ("Mother Tongue", profile.mother_tongue),
+      ]) }}
+
+      {{ section("Education & Career", [
+        ("Qualification", profile.qualification),
+        ("Occupation", profile.occupation),
+        ("Company / Business", profile.company_business),
+        ("Annual Income", profile.income_yearly),
+      ]) }}
+
+      {{ section("Location", [
+        ("Current City", profile.current_city),
+        ("Native Place", profile.native_place),
+      ]) }}
+
+      {{ section("Astrological Details", [
+        ("Rashi", profile.rashi),
+        ("Nakshatra", profile.nakshatra),
+        ("Manglik", profile.manglik),
+        ("Kundli Available", "Yes" if profile.kundli_available else "No"),
+      ]) }}
+
+      {{ section("Lifestyle", [
+        ("Food Preference", profile.food_preference),
+        ("Smoking / Drinking", (profile.smoking or '-') ~ ' / ' ~ (profile.drinking or '-')),
+        ("Hobbies", profile.hobbies),
+      ]) }}
+
+      {% if profile.about_yourself %}
+      <div class="card-csss p-4 mb-3">
+        <h6 class="section-title text-primary border-bottom pb-2 mb-3">About</h6>
+        <p class="small mb-0">{{ profile.about_yourself }}</p>
+      </div>
+      {% endif %}
+
+      {{ section("Partner Preference", [
+        ("Expected Age", (profile.pref_age_min or '-') ~ ' - ' ~ (profile.pref_age_max or '-')),
+        ("Expected Education", profile.pref_education),
+        ("Expected Profession", profile.pref_profession),
+        ("Expected Location", profile.pref_location),
+      ]) }}
+    </div>
+  </div>
+</div>
+{% endblock %}

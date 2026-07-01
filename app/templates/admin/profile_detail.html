@@ -1,0 +1,102 @@
+{% extends "admin/base_admin.html" %}
+{% block title %}{{ profile.full_name }} — Review — {{ org_name }}{% endblock %}
+{% block admin_content %}
+<div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+  <h3 class="display-font text-primary mb-0">{{ profile.full_name }}</h3>
+  <span class="badge badge-status-{{ profile.approval_status }} px-3 py-2">{{ profile.approval_status.title() }}</span>
+</div>
+
+{% if duplicates %}
+<div class="alert alert-warning">
+  <strong><i class="bi bi-exclamation-triangle"></i> Possible Duplicates:</strong>
+  <ul class="mb-0">
+    {% for dupe, score in duplicates %}
+    <li><a href="{{ url_for('admin.profile_detail', public_id=dupe.public_id) }}">{{ dupe.full_name }} ({{ dupe.profile_code }})</a> — {{ score }}% similar</li>
+    {% endfor %}
+  </ul>
+</div>
+{% endif %}
+
+<div class="row g-4">
+  <div class="col-md-4">
+    <div class="card-csss p-3 text-center">
+      {% if profile.featured_photo_path %}
+      <img src="{{ url_for('static', filename=profile.featured_photo_path) }}" class="rounded mb-2 w-100" style="height:260px;object-fit:cover;">
+      {% endif %}
+      <p class="small text-muted mb-1">Code: {{ profile.profile_code }}</p>
+      <p class="small text-muted mb-1">Registered: {{ profile.created_at.strftime('%d %b %Y') }}</p>
+      {% if profile.qr_path %}<img src="{{ url_for('static', filename=profile.qr_path) }}" style="width:100px;">{% endif %}
+    </div>
+
+    <div class="card-csss p-3 mt-3">
+      <h6 class="mb-3">Admin Review</h6>
+      <form method="POST" action="{{ url_for('admin.review_profile', public_id=profile.public_id) }}">
+        {{ form.hidden_tag() }}
+        <div class="mb-2">{{ form.action(class="form-select form-select-sm") }}</div>
+        <div class="mb-2">{{ form.admin_notes(class="form-control form-control-sm", rows="3", placeholder="Notes...") }}</div>
+        {{ form.submit(class="btn btn-primary btn-sm w-100") }}
+      </form>
+      <div class="d-flex gap-2 mt-2">
+        <a href="{{ url_for('admin.edit_profile', public_id=profile.public_id) }}" class="btn btn-sm btn-outline-secondary flex-fill">Edit</a>
+        <form method="POST" action="{{ url_for('admin.archive_profile', public_id=profile.public_id) }}" class="flex-fill">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+          <button class="btn btn-sm btn-outline-warning w-100">Archive</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-8">
+    <div class="card-csss p-4 mb-3">
+      <h6 class="section-title text-primary border-bottom pb-2 mb-3">Personal Details</h6>
+      <div class="row row-cols-1 row-cols-md-2 g-2 small">
+        <div><strong>Gender:</strong> {{ profile.gender }}</div>
+        <div><strong>Age:</strong> {{ profile.age }}</div>
+        <div><strong>DOB:</strong> {{ profile.date_of_birth }}</div>
+        <div><strong>Father:</strong> {{ profile.father_name }}</div>
+        <div><strong>Mother:</strong> {{ profile.mother_name }}</div>
+        <div><strong>Height/Weight:</strong> {{ profile.height_display }} / {{ profile.weight_kg }} kg</div>
+        <div><strong>Caste:</strong> {{ profile.sindhi_caste }} ({{ profile.sub_caste }})</div>
+        <div><strong>Marital Status:</strong> {{ profile.marital_status }}</div>
+      </div>
+    </div>
+    <div class="card-csss p-4 mb-3">
+      <h6 class="section-title text-primary border-bottom pb-2 mb-3">Contact</h6>
+      <div class="row row-cols-1 row-cols-md-2 g-2 small">
+        <div><strong>Phone:</strong> {{ profile.phone }}</div>
+        <div><strong>Email:</strong> {{ profile.email }}</div>
+        <div><strong>City:</strong> {{ profile.current_city }}</div>
+        <div><strong>Address:</strong> {{ profile.permanent_address }}</div>
+      </div>
+    </div>
+    <div class="card-csss p-4 mb-3">
+      <h6 class="section-title text-primary border-bottom pb-2 mb-3">Career & Astrology</h6>
+      <div class="row row-cols-1 row-cols-md-2 g-2 small">
+        <div><strong>Occupation:</strong> {{ profile.occupation }}</div>
+        <div><strong>Qualification:</strong> {{ profile.qualification }}</div>
+        <div><strong>Rashi:</strong> {{ profile.rashi }}</div>
+        <div><strong>Nakshatra:</strong> {{ profile.nakshatra }}</div>
+        <div><strong>Manglik:</strong> {{ profile.manglik }}</div>
+      </div>
+    </div>
+    <div class="card-csss p-4 mb-3">
+      <h6 class="section-title text-primary border-bottom pb-2 mb-3">Photos ({{ profile.photos|length }})</h6>
+      <div class="d-flex flex-wrap gap-2">
+        {% for photo in profile.photos %}
+        <img src="{{ url_for('static', filename=photo.thumbnail_path or photo.file_path) }}" class="rounded" style="width:80px;height:100px;object-fit:cover;">
+        {% endfor %}
+      </div>
+    </div>
+    <div class="card-csss p-4">
+      <h6 class="section-title text-primary border-bottom pb-2 mb-3">Documents</h6>
+      <ul class="small">
+        {% for doc in profile.documents %}
+        <li><a href="{{ url_for('static', filename=doc.file_path) }}" target="_blank">{{ doc.doc_type.replace('_',' ').title() }}</a></li>
+        {% else %}
+        <li class="text-muted">No documents uploaded.</li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}Kundli Matching — {{ org_name }}{% endblock %}
+{% block content %}
+<div class="container py-4" style="max-width: 640px;">
+  <h3 class="display-font text-primary mb-1">Kundli Matching</h3>
+  <p class="text-muted mb-4">Select a Bride and Groom profile to view Ashtakoot Guna Milan compatibility.</p>
+  <form method="GET" action="{{ url_for('member.kundli_match_result') }}" class="card-csss p-4">
+    <div class="mb-3">
+      <label class="form-label">Bride</label>
+      <select name="bride_id" class="form-select" required>
+        <option value="">Select Bride</option>
+        {% for b in brides %}
+        <option value="{{ b.id }}">{{ b.full_name }} ({{ b.profile_code }})</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Groom</label>
+      <select name="groom_id" class="form-select" required>
+        <option value="">Select Groom</option>
+        {% for g in grooms %}
+        <option value="{{ g.id }}">{{ g.full_name }} ({{ g.profile_code }})</option>
+        {% endfor %}
+      </select>
+    </div>
+    <button type="submit" class="btn btn-primary w-100">Check Compatibility</button>
+  </form>
+</div>
+{% endblock %}

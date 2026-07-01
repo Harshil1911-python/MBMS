@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block title %}My Profile — {{ org_name }}{% endblock %}
+{% block content %}
+<div class="container py-4">
+  <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+    <h3 class="display-font text-primary mb-0">My Profile</h3>
+    <div class="d-flex gap-2">
+      {% if profile.is_editable %}
+      <a href="{{ url_for('profile.create_or_edit') }}" class="btn btn-outline-primary btn-sm"><i class="bi bi-pencil"></i> Edit</a>
+      {% endif %}
+      {% if profile.approval_status == 'approved' %}
+      <a href="{{ url_for('member.download_biodata', public_id=profile.public_id) }}" class="btn btn-primary btn-sm"><i class="bi bi-file-earmark-pdf"></i> Download Biodata</a>
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="row g-4">
+    <div class="col-md-4">
+      <div class="card-csss p-3 text-center">
+        {% if profile.featured_photo_path %}
+        <img src="{{ url_for('static', filename=profile.featured_photo_path) }}" class="rounded mb-3 w-100" style="height:280px;object-fit:cover;">
+        {% endif %}
+        <h5>{{ profile.full_name }}</h5>
+        <span class="badge badge-status-{{ profile.approval_status }} px-3 py-2">{{ profile.approval_status.title() }}</span>
+        <p class="text-muted small mt-2">Code: {{ profile.profile_code }}</p>
+        {% if profile.admin_notes %}
+        <div class="alert alert-secondary small text-start mt-2">
+          <strong>Admin Notes:</strong> {{ profile.admin_notes }}
+        </div>
+        {% endif %}
+      </div>
+    </div>
+    <div class="col-md-8">
+      <div class="card-csss p-4">
+        <h6 class="section-title text-primary border-bottom pb-2 mb-3">Summary</h6>
+        <div class="row row-cols-1 row-cols-md-2 g-2 small">
+          <div><strong>Age:</strong> {{ profile.age or '-' }}</div>
+          <div><strong>Height:</strong> {{ profile.height_display }}</div>
+          <div><strong>City:</strong> {{ profile.current_city or '-' }}</div>
+          <div><strong>Occupation:</strong> {{ profile.occupation or '-' }}</div>
+          <div><strong>Qualification:</strong> {{ profile.qualification or '-' }}</div>
+          <div><strong>Marital Status:</strong> {{ profile.marital_status }}</div>
+          <div><strong>Rashi:</strong> {{ profile.rashi or '-' }}</div>
+          <div><strong>Nakshatra:</strong> {{ profile.nakshatra or '-' }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

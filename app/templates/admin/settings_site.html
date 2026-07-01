@@ -1,0 +1,20 @@
+{% extends "admin/base_admin.html" %}
+{% block title %}Site Settings — {{ org_name }}{% endblock %}
+{% block admin_content %}
+<h3 class="display-font text-primary mb-4">Site & Registration Settings</h3>
+<div class="card-csss p-4" style="max-width: 560px;">
+  <form method="POST" novalidate>
+    {{ form.hidden_tag() }}
+    <div class="mb-3">{{ form.org_name.label(class="form-label") }}{{ form.org_name(class="form-control") }}</div>
+    <div class="form-check mb-3">{{ form.registration_open(class="form-check-input") }}{{ form.registration_open.label(class="form-check-label") }}</div>
+    <div class="form-check mb-3">{{ form.auto_approve(class="form-check-input") }}{{ form.auto_approve.label(class="form-check-label") }}</div>
+    <div class="row g-3 mb-3">
+      <div class="col-6">{{ form.min_photos.label(class="form-label") }}{{ form.min_photos(class="form-control") }}</div>
+      <div class="col-6">{{ form.max_photos.label(class="form-label") }}{{ form.max_photos(class="form-control") }}</div>
+    </div>
+    <div class="mb-3">{{ form.contact_email.label(class="form-label") }}{{ form.contact_email(class="form-control") }}</div>
+    <div class="mb-3">{{ form.contact_phone.label(class="form-label") }}{{ form.contact_phone(class="form-control") }}</div>
+    {{ form.submit(class="btn btn-primary w-100") }}
+  </form>
+</div>
+{% endblock %}
