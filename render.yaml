@@ -1,40 +1,28 @@
 services:
   - type: web
-    name: marriage-bureau
-    runtime: python
-    plan: free
-
-    # Build
-    buildCommand: >
-      pip install --upgrade pip setuptools wheel &&
-      pip install -r requirements.txt
-
-    # Start
-    startCommand: >
-      flask db upgrade &&
-      gunicorn wsgi:app
-
+    name: citylight-sindhi-samaj-mbms
+    env: python
+    region: singapore
+    plan: starter
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "flask init-db && flask seed-demo && gunicorn wsgi:app --bind 0.0.0.0:$PORT --workers 3 --timeout 120"
     envVars:
-      - key: PYTHON_VERSION
-        value: 3.12.10
-
-      - key: FLASK_APP
-        value: wsgi.py
-
       - key: FLASK_ENV
         value: production
-
-      - key: PYTHONUNBUFFERED
-        value: "1"
-
+      - key: FLASK_APP
+        value: wsgi.py
       - key: SECRET_KEY
         generateValue: true
-
+      - key: ENCRYPTION_KEY
+        generateValue: true
+      - key: PYTHON_VERSION
+        value: 3.13.0
       - key: DATABASE_URL
         fromDatabase:
-          name: marriage-bureau-db
+          name: citylight-sindhi-samaj-db
           property: connectionString
 
 databases:
-  - name: marriage-bureau-db
-    plan: free
+  - name: citylight-sindhi-samaj-db
+    plan: starter
+    region: singapore

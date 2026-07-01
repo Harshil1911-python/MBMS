@@ -32,7 +32,8 @@ class User(UserMixin, db.Model):
     created_by_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=True)
 
     profile = db.relationship(
-        "Profile", backref="user", uselist=False, cascade="all, delete-orphan"
+        "Profile", backref="user", uselist=False, cascade="all, delete-orphan",
+        foreign_keys="Profile.user_id"
     )
 
     def set_password(self, raw_password: str):
